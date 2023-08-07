@@ -1,8 +1,8 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:user_info/src/view_models/user_viewmodel.dart';
 
 import 'repositories/user_repository.dart';
 import 'services/api_service.dart';
-import 'view_models/user_viewmodel.dart';
 import 'views/user_information_page.dart';
 import 'views/users_home_page.dart';
 import 'views/widgets/error_page.dart';
@@ -29,7 +29,7 @@ class AppModule extends Module {
   List<ModularRoute> get routes => [
         ChildRoute(
           '/',
-          child: (ctx, args) => UsersHomePage(),
+          child: (ctx, args) => const UsersHomePage(),
         ),
         ChildRoute(
           '/user_information',

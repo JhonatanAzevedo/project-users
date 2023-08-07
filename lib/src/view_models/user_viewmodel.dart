@@ -1,37 +1,28 @@
-import 'package:flutter/material.dart';
+import 'package:user_info/src/view_models/user_state.dart';
 
-import '../models/user_model.dart';
+import '../../core/core.dart';
 import '../repositories/user_repository.dart';
 
-class UserViewModel extends ChangeNotifier {
+class UserViewModel extends ViewModel<UserState> {
   final UserRepository _userRepository;
 
-  UserViewModel(this._userRepository);
+  UserViewModel(this._userRepository) : super(UserState.initial());
 
-  List<UserModel>? _users;
-  bool _loading = false;
-  bool _error = false;
-
-  bool get loading => _loading;
-  bool get error => _error;
-  List<UserModel>? get users => _users;
-
-  void setLoading(bool isLoading) {
-    _loading = isLoading;
-    notifyListeners();
+  @override
+  void initViewModel() {
+    super.initViewModel();
+    showUsers();
   }
 
   Future<void> showUsers() async {
-    _loading = true;
-    _error = false;
+    emit(state.copyWith(loading: true));
     final response = await _userRepository.fetchUsers();
 
-    response.fold(
-      (error) => _error = true,
-      (success) => _users = success,
+    var newState = response.fold(
+      (error) => state.copyWith(error: true),
+      (users) => state.copyWith(users: users),
     );
-    
-    _loading = false;
-    notifyListeners();
+
+    emit(newState.copyWith(loading: false));
   }
 }
